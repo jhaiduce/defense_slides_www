@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Exploring Magnetotail Structure and Dynamics
+with Magnetohydrodynamic Simulations</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="shower/themes/noribbon/styles/styles.css">
+	<style>
+	  h3{font-weight:bold};
+          .shower {
+              --slide-ratio: calc(16 / 9);
+          }
+@font-face {
+  font-family: 'DejaVu Sans';
+  src: local('DejaVu Sans'),
+    url('~dejavu-fonts-ttf/ttf/DejaVuSans.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+	</style>
+</head>
+<body class="shower list">
+	<!--
+		Debug class on <body> enables
+		cyan grid on slides
+		-->
+	<header class="caption">
+		<h1>Exploring Magnetotail Structure and Dynamics
+with Magnetohydrodynamic Simulations</h1>
+		<p>John Haiducek</p>
+		
+	</header>
+	<section class="slide" id="titleslide"><div>
+	    <h2>Exploring Magnetotail Structure and Dynamics
+with Magnetohydrodynamic Simulations</h2>
+	    <h3>John Haiducek</h3>
+	    <h3>Sep 6, 2018</h3>
+	    <img class="cover" src="pictures/titleslide.png" alt="">
+	    <style>
+	      #titleslide h2,#titleslide h3{color:#e8d4ca;}
+	      /*#titleslide img{width:100%;position:absolute;top:0px; left:0px;}*/
+	      #titleslide::after{visibility:hidden}
+	    </style>
+	</div></section>
+	<section class="slide" id="title_backgroundonly"><div>
+	    <h2>Output from a magnetohydrodynamic (MHD) model</h2>
+	    <img src="pictures/titleslide.png" alt="">
+	    <img class="next" src="pictures/titleslide_annotated_earth.svg" alt="">
+	    <img class="next" src="pictures/titleslide_annotated_solarwind.svg" alt="">
+	    <img class="next" src="pictures/titleslide_annotated_magnetotail.svg" alt="">
+	    <img class="next" src="pictures/titleslide_annotated_plasmoid.svg" alt="">
+	    <style>
+	      #title_backgroundonly h2,#title_backgroundonly h3{color:#e8d4ca;}
+	      #title_backgroundonly img{width:100%;position:absolute;top:0px; left:0px;}
+	    </style>
+	</div></section>
+	<section class="slide" id="TableOfContents">
+	  <div>
+              <header>
+                <h2>Summary</h2>
+              </header>
+              <nav class="shower toc"></nav>
+	  </div>
+	</section>
+	<section class="slide"><div>
+	    <h2>Solar wind provides energy to the magnetosphere</h2>
+	    <video id="overview_movie" controls loop>
+	      <source src="movies/10623_Recon_Bounce_H264_1280x720_29.97.m4v"/>
+	    </video>
+	    <div id="overview_movie_credit">Walt Feimer, <br/> NASA SVS, 2010</div>
+	    <style>
+		#overview_movie{width:90%; position:relative; top:-25px; left:-50px;}
+		#overview_movie_credit{position:absolute; top:100px; left:82%;}
+	    </style>
+	</div></section>
+	<section class="slide objectives"><div>
+	    <img src="pictures/applications.png" class="applications">
+	    <div>
+	    <h2>Motivation</h2>
+	    <ul>
+	      <li>Magnetotail is a very dynamic region which is <br/>poorly covered by observational data</li>
+	      <li>Magnetotail dynamics contribute to space weather hazards
+		<ul>
+		  <li>Geomagnetically induced currents</li>
+		  <li>Spacecraft charging</li>
+		  <li>Spacecraft anomalies</li>
+		  <li>Communication outages</li>
+		</ul>
+	      <li>Magnetotail is not always considered in forecasting of space weather</li>
+	    </ul>
+	  </div>
+	    <style>
+	      img.applications{
+	      position:absolute;
+	      top:0;
+	      left:610px;
+	      height:100%;
+	      z-index:0;
+	      }
+	      section.objectives>div>div{
+	      width:700px;
+	      }
+	    </style>
+	</div></section>
+	<section class="slide objectives"><div>
+	    <img src="pictures/applications.png" class="applications">
+	    <div>
+	    <h2>Motivation</h2>
+	    <ul>
+	      <li>MHD captures global dynamics, including <br/>connections between different regions and spatial scales</li>
+	      <li>MHD models have been used to study the magnetosphere for many years</li>
+	      <li>Few MHD validation efforts have focused on the magnetotail</li>
+	    </ul>
+	  </div>
+	</div></section>
+	<section class="slide objectives"><div>
+	    <img src="pictures/applications.png" class="applications">
+	    <div>
+	    <h2>Objectives</h2>
+	    <ul>
+	      <li>Extend the validation of MHD into the magnetotail <br/>region</li>
+	      <li>Explore the connections between the magnetosphere and ionosphere</li>
+	      <li>Test whether MHD can consistently reproduce observed substorms</li>
+	    </ul>
+	  </div>
+	</div></section>
+	<section class="slide" id="model_overview"><div>
+	    <h2>Summary</h2>
+	    <nav class="toc"/>
+	</div></section>
+	<section class="slide" id="movie_demo"><div>
+	    <h2>Space Weather Modeling Framework</h2>
+	    <img id="operational" src="pictures/swmf_operational_adjusted.svg">
+	    <video controls loop>
+	      <source src="movies/demo_zoom.mp4" controls="true"/>
+	    </video>
+	    <div class="solar_wind_title">Solar wind inputs</div>
+	    <style>
+	      #movie_demo video{width:630px; position:absolute; top:70px; left:390px; z-index:0;}
+	      #movie_demo h2{position:absolute; top:15px; z-index:1;}
+	      #operational{height:85%; float:left; position:absolute; left:10px; top:70px; z-index:0;}
+	      .solar_wind_title{position:absolute; top:88px; left:calc(468px + 142px/2);
+				transform:translateX(-50%);
+				font-family: DejaVu Sans; font-size:16px;}
+	    </style>
+	</div></section>
+	<section class="slide" id="indices"><div>
+	    <h2>Geomagnetic indices estimate magnetospheric current systems</h2>
+	    <img id="currents" src="pictures/Currents.jpg"/>
+	    <div id="currents_credit">From Stern (1994)</div>
+	    <div id="indices_text">
+	    <ul>
+	      <li>Currents are constantly changing</li>
+	      <li>Currents produce a magnetic field that can be observed from the ground</li>
+	      <li>Geomagnetic indices are computed from ground-based magnetic field measurements</li>
+	    </ul>
+	    <style>
+	      #indices h2{position:relative; top:-0.7em;}
+	      #currents{width:540px; position:absolute; top:100px; z-index:-1;}
+	      #currents_credit{position:absolute; top:91%; left:37%}
+	      #indices_text{position:absolute; top:120px; left:63%; width:350px;}
+	      #indices::after{visibility:hidden}
+	    </style>
+	</div></section>
+	<section class="slide"><div>
+	    <h2>Sym-H index estimates azimuthal current strength</h2>
+	    <img id="currents" src="pictures/Currents.jpg"/>
+	    <div id="currents_credit">From Stern (1994)</div>
+	    <div id="symh_currents_text">
+	      <b>Sym-H</b>
+	    <ul>
+	      <li>Computed from low-latitude magnetometers</li>
+	      <li>Sensitive to azimuthal currents (ring current, partial ring current, cross-tail current, magnetopause current)</li>
+	    </ul>
+	    <style>
+	      #currents_credit{position:absolute; top:91%; left:37%}
+	      #symh_currents_text{position:absolute; top:200px; left:63%}
+	    </style>
+	</div></section>
+	<section class="slide" id="symh_storms"><div>
+	    <h2>Model does well at predicting Sym-H</h2>
+	    <img class="symh_storms_timeseries" src="pictures/symh_storms_timeseries_build0.svg"/>
+	    <img class="next symh_storms_timeseries" src="pictures/symh_storms_timeseries_build2.svg"/>
+	    <div id="symh_bullets">
+	      <ul>
+		<li>Storm-time behavior
+		  <ul>
+		    <li>Ring current strengthens</li>
+		    <li>Sym-H turns negative</li>
+		  </ul>
+		</li>
+		<li>Good Sym-H predictions
+		  <ul>
+		    <li>Indicate model has realistic ring currents</li>
+		    <li>Important for storm-time accuracy</li>
+		  </ul>
+		</li>
+	    </ul>
+	    </div>
+	    <style>
+	      img.symh_storms_timeseries{width:55%; position:absolute; top:180px; left:-0px;}
+	      div#symh_bullets{width:43%; position:absolute; left:57%; top:150px;}
+	    </style>
+	</div></section>
+	<section class="slide" id="symh_dist"><div>
+	    <h2>Model does well at predicting Sym-H</h2>
+	    <img class="dist_plot" src="pictures/Sym_H_interpolated_error_norcm_build0.svg"/>
+	    <img class="dist_plot next" src="pictures/Sym_H_interpolated_error_norcm_build1.svg"/>
+	    <img class="dist_plot next" src="pictures/Sym_H_interpolated_error_norcm.svg"/>
+	    <style>
+	      img.dist_plot{width:850px; position:absolute; top:120px;}
+	    </style>
+	</div></section>
+        <section class="slide" id="al_behavior"><div>
+            <h2>AL index responds to substorm electrojet current</h2>
+            <div id="mag_grid_sphere">
+              <img src="pictures/mag_grid_sphere_crosstailonly.svg"/>
+              <img class="next" src="pictures/mag_grid_sphere_nocurrentfield.svg"/>
+            </div>
+	    <img id="al_behavior_aual" class="next" src="pictures/al.svg"/>
+            <style>
+              #mag_grid_sphere{width:116%; position:relative; top:-60px; left:-8%; z-index:0;}
+              #mag_grid_sphere img{width:100%; position:absolute; top:0px; left:0px;}
+              #al_behavior h2{position:relative; z-index:1;}
+              #al_behavior{background-color:black;}
+	      #al_behavior_aual{position:absolute; top:220px; left:770px; width:225px;}
+            </style>
+        </div></section>
+	<section class="slide" id="al_overview"><div>
+	    <h2>Strongly negative AL is missed</h2>
+	    <img class="dist_plot" src="pictures/AL_interpolated_error_log_norcm_build0.svg"/>
+	    <img class="dist_plot next" src="pictures/AL_interpolated_error_log_norcm.svg"/>
+	</div></section>
+	<section class="slide" id="ib"><div>
+	    <h2>Summary</h2>
+	    <nav class="toc"/>
+	</div></section>
+	<section class="slide">
+	  <h2>Isotropic boundary consists of a sharp change in particle precipitation</h2>
+	  <div id="noaa_counts_container">
+	  <img id="noaa_counts" src="pictures/ib_quiet/noaa_counts.svg"/>
+	  </div>
+	  <style>
+	    #noaa_counts{width:600px}
+	    #noaa_counts_container::after{
+	    content:"\AGanushkina (2005)";
+	    clear:both;
+	    text-align:right;
+	    white-space:pre;
+	    }
+	  </style>
+	</section>
+	<section class="slide">
+	  <h2>Scattering mechanisms</h2>
+	  <div id="css_bullets">
+	  <b>Current sheet scattering (CSS)</b>
+	  <ul>
+	    <li>Explains presence of IB at all times and MLTs</li>
+	    <li>Occurs when field line curvature \(r_c\) is small and gyroradius \(r_g\) is large</li>
+	    <li>Controlled by \(K=\frac{r_c}{r_g}\)</li>
+	  </ul>
+	  </div>
+	  <div id="emic_bullets">
+	    <b>EMIC wave scattering</b>
+	    <ul>
+	      <li>Requires presence of EMIC waves</li>
+	      <li>Wave frequency must be near ion gyrofrequency</li>
+	      <li>EMIC waves are more common during active times</li>
+	    </ul>
+	  </div>
+	  <div id="objectives_bullets">
+	    <b>Objectives</b>
+	    <ul>
+	      <li>Constrain the range of \(K\) associated with CSS</li>
+	      <li>Assess the relative importance of CSS during storms</li>
+	    </ul>
+	  </div>
+	  <div>
+	  <style>
+	    #css_bullets{position:absolute; top:140px; width:40%}
+	    #emic_bullets{position:absolute; top:140px; left:50%; width:40%}
+	    #objectives_bullets{position:absolute; top:420px}
+	  </style>
+	</section>
+	<section class="slide">
+	  <h2>Field lines traced to determine origin of IB particles</h2>
+	  <img id="tracing_example" src="pictures/ib_quiet/r_rCurve_kappa_ib_run_20090213_hires_r1_2009-02-13T02:25:23_traceonly.svg"/>
+	  <ul id="tracing_bullets">
+	    <li>Trace starts at IB observation</li>
+	    <li>\(K\) estimated where field line crosses current sheet</li>
+	    <li>THEMIS satellites provide magnetic field observations in the vicinity</li>
+	  </ul>
+	  <style>
+	    #tracing_example{
+	    width:400px;
+	    position:absolute;
+	    top:120px;
+	    left:610px;
+	    }
+	    #tracing_bullets{width:500px;}
+	  </style>
+	</section>
+	<section class="slide">
+	  <h2>\(K\) correlates with \(\Delta B_z\)</h2>
+	  <img id="kappa_fit" src="pictures/ib_quiet/kappa_dbz_fit.svg"/>
+	  <ul id="kappa_fit_bullets">
+	    <li>Model error in \(B_z\) obtained using THEMIS observations</li>
+	    <li>Correlation between \(K\) and \(\Delta B_z\) allows part of the error in \(K\) to be removed</li>
+	  </ul>
+	  <style>
+	    #kappa_fit{width:400px;}
+	    #kappa_fit_bullets{
+	    width:400px; 
+	    position:absolute;
+	    top:150px;
+	    left:500px;
+	    }
+	  </style>
+	</section>
+	<section class="slide">
+	  <h2>Corrected \(K\)'s fall in a fairly narrow range</h2>
+	  <img id="kappa_kde_quiet" src="pictures/ib_quiet/kappa_kde.svg"/>
+	  <style>
+	    #kappa_kde_quiet{
+	    width:500px;
+	    position:relative;
+	    left:100px;
+	    }
+	  </style>
+	</section>
+	<section class="slide">
+	  <h2 id="ib_time_title">IB properties vary significantly during storms</h2>
+	  <img id="ib_time" src="pictures/ib_storm/ib_time.svg"/>
+	  <style>
+	    #ib_time_title{
+	    position:absolute; top:20px;
+	    }
+	    #ib_time{
+	    width:500px;
+	    position:absolute;
+	    left:100px;
+	    top:80px;
+	    }
+	  </style>
+	</section>
+	<section class="slide" id="mlt_symh_lat_slide">
+	  <h2 id="mlt_symh_lat_title">Sym-H and MLT correlate with IB latitude but not \(K^*\)</h2>
+	  <img id="mlt_symh_lat" src="pictures/ib_storm/mlt_lat_kappastar_lineplot.svg"/>
+	  <ul id="mlt_symh_lat_bullets">
+	    <li>Indicates that CSS process is active for a significant portion of IB observations</li>
+	  </ul>
+	  <style>
+	    #mlt_symh_lat_title{
+	    position:absolute;
+	    top:20px;
+	    }
+	    #mlt_symh_lat{
+	    width:600px;
+	    position:absolute;
+	    left:400px;
+	    top:90px;
+	    }
+	    #mlt_symh_lat_bullets{
+	    width:300px;
+	    position:absolute;
+	    top:200px;
+	    left:100px;
+	    }
+	    #mlt_symh_lat_slide::after{visibility:hidden}
+	    #mlt_symh_lat_bullets{}
+	  </style>
+	</section>
+	<section class="slide" id="kappa_kde_storm_slide">
+	  <h2 id="kappa_kde_storm_title">Storm-time \(K\) is often within the range for CSS</h2>
+	  <ul id="kappa_kde_storm_bullets">
+	    <li>Between 21% to 69% of \(K^*\) values are in range for CSS, depending on threshold and latitude set used</li>
+	    <li>Indicates that CSS is not the sole mechanism</li>
+	  </ul>
+	  <img id="kappa_kde_storm" src="pictures/ib_storm/kappa_kde_storm.svg"/>
+	  <style>
+	    #kappa_kde_storm_title{
+	    position:absolute;
+	    top:20px;
+	    }
+	    #kappa_kde_storm{
+	    width:330px;
+	    position:absolute;
+	    left:600px;
+	    top:90px;
+	    }
+	    #kappa_kde_storm_bullets{
+	    width:450px; 
+	    position:absolute;
+	    top:120px;
+	    left:100px;
+	    }
+	    #kappa_kde_storm_slide::after{visibility:hidden}
+	  </style>
+	</section>
+	<section class="slide" id="substorm_identification"><div>
+	    <h2>Summary</h2>
+	    <nav class="toc"/>
+	</div></section>
+	<section class="slide" id="methodology"><div>
+	    <h2>Substorm validation effort</h2>
+	    <h3>Can SWMF predict substorms?</h3>
+	    <ol>
+	      <li>Use a &ldquo;vanilla&rdquo; SWMF global magnetosphere set-up</li>
+	      <li>Feed a month (January, 2005) of observed solar wind data into it</li>
+	      <li>Look for substorms...</li>
+	    </ol>
+	    <div id="methodology_note" class="next">
+	      <p>...this last step is complicated by the lack of an agreed-upon method for identifying substorms</p>
+	    </div>
+	    <style>
+	      #methodology li{font-size:1.25em;}
+	      #methodology h3{padding-top:1em;}
+	      #methodology_note{}
+	    </style>
+	</div></section>
+	<section class="slide" id="substorm_id_overview"><div>
+	    <h2>Substorm identification</h2>
+	    <ul>
+	      <li id="substorm-signatures">Substorms can be identified in many ways
+	      <figure id="plasmoid_cropped"><img src="pictures/example_plasmoid_cropped.png"/><figcaption>Plasmoid releases (model)</figcaption></figure>
+	      <figure id="satmags"><img src="pictures/example_magdata_in_situ.svg"/><figcaption>Satellite fields (model+obs.)</figcaption></figure>
+	      <figure id="groundmags"><img src="pictures/mags_ground.svg"/><figcaption>Ground-based fields (model+obs.)</figcaption></figure>
+	      <figure id="epdata_small"><img src="pictures/Fig-4-Energetic-proton-data-from-the-Los-Alamos-National-Laboratory-LANL-Synchronous.png"/><figcaption>Energetic particles (obs.)</figcaption></figure>
+	      <figure id="imagefuv_small"><img src="pictures/Fig-11-Maps-of-Northern-Hemisphere-FUV-emission-converted-to-electron-energy-flux-mWm.png"/><figcaption>Auroral brightening (obs.)</figcaption></figure>
+	      </li>
+	      <li class="next">Each method produces false positives and misses</li>
+	      <li class="next">Using all datasets together could improve accuracy</li>
+	    </ul>
+	    <style>
+	      #substorm_id_overview ul{position:relative;top:-20px}
+	      #substorm_id_overview figcaption, #substorm_id_overview figure{font-size:20px;line-height:25px; text-indent:0;}
+	      #plasmoid_cropped, #plasmoid_cropped img{width:440px}
+	      #plasmoid_cropped{position:absolute; top:40px;left:-30px;}
+	      #satmags, #satmags img{width:235px;}
+	      #satmags{position:absolute; top:40px; left:405px;}
+	      #groundmags, #groundmags img{width:270px;}
+	      #groundmags{position:absolute;top:180px;left:80px;}
+	      #epdata_small, #epdata_small img{width:140px;}
+	      #epdata_small{ position:absolute; top:40px; left:650px}
+	      #imagefuv_small, #imagefuv_small img{width:150px; }
+	      #imagefuv_small{position:absolute; top:40px; left:800px}
+	      #substorm-signatures{padding-bottom:270px;}
+	      #substorm_id_overview ul>li:nth-of-type(2),#substorm_id_overview ul>li:nth-of-type(3){position:relative; left:400px;}
+	    </style>
+	</div></section>
+	<section class="slide" id="combining_signatures"><div>
+	    <h2>Combining signatures</h2>
+	    <img class="convolution" src="pictures/substorms/substorm_convolution_build0.svg"/>
+	    <div id="convolution_text">
+	    <ol>
+	      <li class="next">Convolve each onset list with a Gaussian kernel
+	      	<img class="convolution" src="pictures/substorms/substorm_convolution_build1.svg"/>
+	      </li>
+	      <li class="next">Add convolved scores together
+	      	<img class="convolution" src="pictures/substorms/substorm_convolution_build2.svg"/>
+	      </li>
+	      <li class="next">Identify local maxima that exceed a threshold
+	      	<img class="convolution" src="pictures/substorms/substorm_convolution.svg"/>
+	      </li>
+	    </ol>
+
+	    <div class="next">
+	    <b>Tuning parameters:</b>
+	    <ul>
+	      <li>Kernel width = 10 min</li>
+	      <li>Threshold = 2.5</li>
+	      <li>Could be different for model and observations</li>
+	    </ul>
+	    </div>
+	    </div>
+	    <style>
+	      img.convolution{width:550px; position:fixed; top:110px; left:20px;}
+	      #convolution_text{position:absolute; top:80px; left:60%; line-height:1.5}
+	    </style>
+	</div></section>
+	<section class="slide"><div>
+	    <h2>Combining signatures reduces false positives and data gaps</h2>
+	    <div id="substorm_results_table" class="substorm_results_table">
+	      <table>
+	      <thead>
+	      <tr><td/><th>SWMF events</th><th>Obs. events</th>
+	      </tr></thead>
+	      <tr class="signature_AL"><th scope="row">AL</th><td>100</td><td>156</td></tr>
+	      <tr class="signature_MPB"><th scope="row">MPB</th><td>192</td><td>167</td></tr>
+	      <tr class="signature_dipolarizations"><th scope="row">Dipolarizations</th><td>145</td><td>77</td></tr>
+	      <tr class="signature_image"><th scope="row">IMAGE/FUV</th><td>-</td><td>97</td></tr>
+	      <tr class="signature_epdata"><th scope="row">LANL EP data</th><td>-</td><td>109</td></tr>
+	      <tr class="signature_plasmoids"><th scope="row">Plasmoids</th><td>397</td><td>-</td></tr>
+	      <tr class="signature_All"><th scope="row">All</th><td>97</td><td>102</td></tr>
+	      </table>
+	      
+	    </div>
+	    <div id="substorm_results_table_2" class="substorm_results_table">
+	      <table>
+	      <thead>
+	      <tr><td/><th>SWMF events</th><th>Obs. events</th>
+	      </tr></thead>
+	      <tr class="signature_AL"><th scope="row">AL</th><td>100</td><td>156</td></tr>
+	      <tr class="signature_MPB"><th scope="row">MPB</th><td>192</td><td>167</td></tr>
+	      <tr class="signature_dipolarizations"><th scope="row">Dipolarizations</th><td>145</td><td>77</td></tr>
+	      <tr class="signature_image"><th scope="row">IMAGE/FUV</th><td>-</td><td>97</td></tr>
+	      <tr class="signature_epdata"><th scope="row">LANL EP data</th><td>-</td><td>109</td></tr>
+	      <tr class="signature_plasmoids"><th scope="row">Plasmoids</th><td>397</td><td>-</td></tr>
+	      <tr class="signature_All"><th scope="row">All</th><td>97</td><td>102</td></tr>
+	      </table>
+	      
+	    </div>
+	    <style>
+	      .substorm_results_table{position:absolute; left:20%; top:160px;background-color:white}
+	      .substorm_results_table td, .substorm_results_table th{text-align:center; line-height:1.5;}
+	    </style>
+	</div></section>
+	<section class="slide" id="predictive_skill"><div>
+	    <h2>Skill score measure the model's accuracy</h2>
+	    <div id="stats" class="next">
+	      <b>Heidke skill score (HSS)</b>
+	      <ul>
+		<li>0=random chance (no skill)</li>
+		<li>1=perfect forecast</li>
+		<li>My HSS: 0.11</li>
+	      </ul>
+	    </div>
+
+	    <table id="contingency_table_large">
+	      <tr>
+		<td rowspan="2" colspan="2"></td>
+		<td colspan="2">Observations</td>
+	      </tr>
+	      <tr>
+		<td>Y</td><td>N</td>
+	      </tr>
+	      <tr>
+		<td rowspan="2"><span class="rotate-outer"><span class="rotate-inner">Model</span></span></td>
+		<td>Y</td>
+		<td class="cont-inner hits">17</td>
+		<td class="cont-inner false-positives">80</td>
+	      </tr>
+	      <tr>
+		<td>N</td>
+		<td class="cont-inner misses">85</td>
+		<td class="cont-inner true-negatives">1,306</td>
+	      </tr>
+	    </table>
+
+	    <div id="skillscore_note">
+	      <p class="next">HSS > 0 (good)...but is it significantly greater than zero?</p>
+	      <p class="next">Also, this was obtained using a particular threshold (2.5) for identifying a substorm in both the model and the observations...do we get positive skill scores for other thresholds?</p>
+	    </div>
+	    
+	    <style>
+	      #skillscore_note{position:relative; top:20px;}
+	      div#stats{float:right; width:50%; position:relative; top:0px; font-size:1.25em;}
+	      div#stats li{margin-top:0.25em; margin-bottom:0.25em}
+	      div#stats ul{margin-bottom:0.25em}
+	      div#boxplots_container{width:60%; position:absolute; left:40%; top:100px;}
+	      div#boxplots_container img{width:100%;}
+	      /*img#epsilon_boxplots{width:70%; position:relative; top:-100px;}
+		img#al_strength_boxplots{width:29%; position:relative; top:-70px;}*/
+		table#contingency_table_large tr{border:none; background:white;}
+		table#contingency_table_large td{border:none; background:white; width:100px; background-color:solid white; text-align:center; padding:0px;}
+		table#contingency_table_large{width:30%; font-size:1.25em; position:relative; left:250px; top:75px; transition: all 0.2s ease;}
+	      
+		table#contingency_table_large td.cont-inner{border:1px solid black;}
+		table#contingency_table tr{border:none; background:white;}
+		table#contingency_table td{border:none; background:white; width:80px;}
+	      .rotate-outer {
+    display: inline-block;
+    overflow: hidden;
+    width: 1.5em;
+    line-height: 1.5;
+}
+.rotate-inner {
+    display: inline-block;
+    white-space: nowrap;
+    -webkit-transform: translate(0,100%) rotate(-90deg);
+       -moz-transform: translate(0,100%) rotate(-90deg);
+        -ms-transform: translate(0,100%) rotate(-90deg);
+         -o-transform: translate(0,100%) rotate(-90deg);
+            transform: translate(0,100%) rotate(-90deg);
+    -webkit-transform-origin: 0 0;
+       -moz-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+         -o-transform-origin: 0 0;
+            transform-origin: 0 0;
+}
+/* This element stretches the parent to be square
+   by using the mechanics of vertical margins  */
+.rotate-inner:before {
+    content: "";
+	      float: left;
+	      margin-top: 100%;
+}
+	    </style>
+	</div></section>
+	<section class="slide" id="hss_v_count_ratio"><div>
+	    <h2>Model has significant predictive skill</h2>
+	    <ul>
+	      <li>95% confidence interval shows skill is significant
+		<img id="score_v_count_ratio_build0" class="score_v_count_ratio" src="pictures/substorms/score_v_count_ratio_build0.svg"/>
+	      </li>
+	      <li class="next">Significance persists when thresholds are varied
+		<img id="score_v_count_ratio_build1" class="score_v_count_ratio" src="pictures/substorms/score_v_count_ratio_build1.svg"/>
+	      </li>
+	      <img id="score_v_count_ratio" class="score_v_count_ratio next" src="pictures/substorms/score_v_count_ratio.svg"/>
+	  </div>
+	  <style>
+	    img.score_v_count_ratio{width:700px; position:fixed; top:105px; left:30px}
+	    #hss_v_count_ratio ul{position:relative; left:700px; width:250px}
+	  </style>
+	</section>
+	<section class="slide"><div>
+	    <h2>Conclusions</h2>
+	    <ul>
+	      <li>SWMF does well in predicting geomagnetic indices</li>
+	      <li>CSS plays dominant role for IB formation during quiet conditions and a significant role during storm conditions</li>
+	      <li>Substorm identification procedure fulfills a community need to move toward multiple-signature identification
+		<ul>
+		  <li>False identifications are rejected</li>
+		  <li>Data gaps are filled</li>
+		</ul>
+	      </li>
+	      <li>Substorm prediction with MHD is possible</li>
+	    </ul>
+	</div></section>
+	<section class="slide">
+	  <h2>What's next: Isotropic boundaries</h2>
+	  <ul>
+	    <li>Study additional time periods for better statistics</li>
+	    <li>Compare with EMIC wave observations</li>
+	    <li>Test day-side IB observations</li>
+	  </ul>
+	</section>
+	<section class="slide" id="next_steps"><div>
+	    <h2>What's next: Identification procedure</h2>
+	    <ul>
+	      <li>More tests of identification procedure
+		<ul>
+		  <li>Randomized data</li>
+		  <li>Additional signatures and time periods</li>
+		</ul>
+	      </li>
+	      <li>Improvements to identification procedure
+		<ul>
+		  <li>Asymmetric kernels to account for time offsets</li>
+		  <li>Non-uniform weights</li>
+		  <li>Variable threshold</li>
+		</ul>
+	      </li>
+	</div></section>
+	<section class="slide" id="next_steps"><div>
+	    <h2>What's next: SWMF magnetosphere modeling</h2>
+	      <li>Test methods of improving field line stretching</li>
+	      <li>Better physics in reconnection region
+	      </li>
+	      <li>Uncertainty quantification
+	      </li>
+	      <li>Data assimilation
+	      </li>
+	    </ul>
+	    <style>
+	      #next_steps li{line-height:150%;}
+	    </style>
+	</div></section>
+	
+	<section class="slide" id="slide_sea"><div>
+	    <h2>Events have characteristic substorm response</h2>
+	    <img id="sea_plots" src="pictures/substorms/all_tiled_onsetcomp_sea.svg"/>
+	    <ul>
+	      <li>Lines show median of onsets</li>
+	      <li>Shading shows interquartile range</li>
+	      <li>Model under-predicts AL strength, over-predicts MPB strength</li>
+	    </ul>
+	    <style>
+	      #slide_sea h2{position:relative; top:-50px;}
+	      #sea_plots{width:80%; position:relative; top:-80px; left:-50px;}
+	      #slide_sea ul{position:absolute; left:75%; top:100px;}
+	    </style>
+	</div></section>
+	<section class="slide"><div>
+	    <h2>Model produces realistic waiting times</h2>
+	    <img id="isi_plots" src="pictures/substorms/isi.svg"/>
+	    <style>
+	      #isi_plots{width:80%; position:relative; top:0px;}
+	    </style>
+	</div></section>
+
+	<section class="slide" id="roc_curves_slide"><div>
+	    <h2>POD exceeds POFD</h2>
+	    <img id="roc_curves" src="pictures/substorms/roc_curves.svg"/>
+	    <style>
+	      #roc_curves{width:600px; position:relative; top:-30px;}
+	    </style>
+	</div></section>
+
+	<section class="slide" id="slide_sea"><div>
+	    <h2>Events have characteristic substorm response</h2>
+	    <img id="sea_plots" src="pictures/substorms/all_all_tiled_onsetcomp_sea.svg"/>
+	    <ul>
+	      <li>Lines show median of onsets</li>
+	      <li>Shading shows interquartile range</li>
+	      <li>Model under-predicts AL strength, over-predicts MPB strength</li>
+	    </ul>
+	    <style>
+	      #slide_sea h2{position:relative; top:-50px;}
+	      #sea_plots{width:80%; position:relative; top:-80px; left:-50px;}
+	      #slide_sea ul{position:absolute; left:75%; top:100px;}
+	    </style>
+	</div></section>
+
+	<section class="slide"><div>
+	    <h2>Reconnection drives plasma flow</h2>
+	    <img class="plasmoid_blines_sampled" src="pictures/plasmoid_blines_sampled_build0.svg"/>
+	    <img class="next plasmoid_blines_sampled" src="pictures/plasmoid_blines_sampled_build1.svg"/>
+	    <img class="next plasmoid_blines_sampled" src="pictures/plasmoid_blines_sampled_build2.svg"/>
+	    <img class="next plasmoid_blines_sampled" src="pictures/plasmoid_blines_sampled_build3.svg"/>
+	    <div>
+	    <style>
+	      img.plasmoid_blines_sampled{height:400px; position:absolute; left:100px; top:150px;}
+	    </style>
+	    </div>
+	</div></section>
+	<section class="slide" id="id_example"><div>
+	    <h2>Plasmoids move tailward</h2>
+	    <img class="example_plasmoid" src="pictures/example_plasmoid_1.png"/>
+	    <img class="next example_plasmoid" src="pictures/example_plasmoid_2.png"/>
+	    <img class="next example_plasmoid" src="pictures/example_plasmoid.png"/>
+	    <img class="next" id="dipolarization" src="pictures/example_magdata_in_situ.svg"/>
+	    <style>
+	      img.example_plasmoid{width:70%; position:absolute; top:100px; left:150px;}
+	      #dipolarization{position:absolute; top:250px; left:450px; width:250px; border:2px solid black}
+	    </style>
+	</div></section>
+        <section class="slide" id="surface_signatures"><div>
+            <h2>Substorm currents affect magnetic fields</h2>
+            <div id="mag_grid_sphere">
+              <img src="pictures/mag_grid_sphere_crosstailonly.svg"/>
+              <img src="pictures/mag_grid_sphere_nocurrentfield.svg"/>
+            </div>
+	    <img id="aual" src="pictures/al.svg"/>
+	    <img id="mpb" class="next" src="pictures/mpb.svg"/>
+            <style>
+              #mag_grid_sphere{width:116%; position:relative; top:-60px; left:-8%; z-index:0;}
+              #mag_grid_sphere img{width:100%; position:absolute; top:0px; left:0px;}
+              #surface_signatures h2{position:relative; z-index:1;}
+              #surface_signatures{background-color:black;}
+	      #aual{position:absolute; top:50px; left:790px; width:225px;}
+	      #mpb{position:absolute; top:250px; left:460px; width:225px; border:2px solid black}
+            </style>
+        </div></section>
+	<section class="slide" id="id_example_epdata"><div>
+	    <h2>Energetic particles <br/>detected by spacecraft</h2>
+	    <img id="lanl_epdata" src="pictures/Fig-4-Energetic-proton-data-from-the-Los-Alamos-National-Laboratory-LANL-Synchronous.png"/>
+	    <div id="lanl_epdata_credit">Henderson, 2009</div>
+	    <ul>
+	      <li>LANL SOPA instrument detects particle fluxes in geosynchronous orbit</li>
+	      <li>Use list from Borovsky (2017)</li>
+	    </ul>
+	    <style>
+	      img#lanl_epdata{width:42%; position:absolute; left:50%; top:5px;}
+	      #lanl_epdata_credit{position:absolute; top:520px; z-index:100; width:42%; text-align:right}
+	      #id_example_epdata ul{width:50%}
+	    </style>
+	</div></section>
+	<section class="slide" id="id_example_image_fuv"><div>
+	    <h2>Auroral brightening</h2>
+	    <img id="image-fuv-example" src="pictures/Fig-11-Maps-of-Northern-Hemisphere-FUV-emission-converted-to-electron-energy-flux-mWm.png"/>
+	    <div id="image-fuv-example-credit">Kavanagh et al., 2007</div>
+	    <ul id="image-fuv-bullets">
+	      <li>Substorm onsets observed WIC camera on the IMAGE spacecraft</li>
+	      <li>Use list from Frey et al., 2004 (since updated to include 2005)</li>
+	    </ul>
+	    <style>
+	      img#image-fuv-example{width:45%; position:absolute; left:50%; top:20px;}
+	      #image-fuv-example-credit{position:absolute; top:520px; z-index:100; width:44%; text-align:right}
+	      #image-fuv-bullets{position:relative; left:0px; width:50%}
+	    </style>
+	</div></section>
+
+	<!--
+		To hide progress bar from entire presentation
+		just remove “progress” element.
+		-->
+	<div class="progress"><div></div></div>
+	<script src="shower/shower.min.js"></script>
+	<script async src="node_modules/html-import/src/html-import.js"></script>
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({
+	      extensions: ["tex2jax.js"],
+	      jax: ["input/TeX", "output/HTML-CSS"],
+	      "HTML-CSS": {
+		  fonts: ["TeX"]
+	      },
+              MMLorHTML: {prefer: "HTML"},
+	      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	  });
+	</script>
+	<script type="text/javascript" src="mathjax/MathJax.js" async></script>
+	<script>
+
+	  // Table of contents entries
+	  var tocEntries = [
+	      {"index": "the_space_environment", "title": "Objectives and motivation"},
+	      {"index": "model_overview", "title": "Model overview and validation"},
+	      {"index": "ib", "title": "Magnetosphere-ionosphere mapping"},
+	      {"index": "substorm_identification", "title": "Substorm prediction"},
+	      {"index": "conclusions", "title": "Conclusions"},
+	  ];
+
+	  function makeToc(tocEntries)
+	  {
+	      // Create UL element
+	      var ul=document.createElement('ul');
+	      
+	      tocEntries.forEach(function(entry,index){
+
+		  // Make the LI element
+		  li=document.createElement('li')
+		  text=document.createTextNode(entry['title'])
+		  li.appendChild(text)
+
+		  // Set the class so we can find elements later
+		  li.classList.add(entry['index'])
+
+		  // Add to list
+		  ul.appendChild(li)
+	      });
+	      return ul;
+	  };
+
+
+	  // Create a new style element
+	  var style = (function() {
+	      // Create the <style> tag
+	      var style = document.createElement("style");
+	      
+	      // WebKit hack
+	      style.appendChild(document.createTextNode(""));
+
+	      // Add the <style> element to the page
+	      document.head.appendChild(style);
+  
+	      console.log(style.sheet.cssRules); // length is 0, and no rules
+
+	      return style;
+	  })();
+	  
+	  window.onload=function(){
+
+	      // Insert TOC's into document
+	      var pendingElements = document.getElementsByClassName('toc');
+	      Array.prototype.filter.call(pendingElements,function(element){
+		  element.appendChild(makeToc(tocEntries));
+	      });
+
+	      // CSS rules to bolden active elements of TOC
+	      tocEntries.forEach(function(entry,index){
+		  id=entry['index']
+		  style.sheet.insertRule('#'+id+' li.'+id+'{font-weight:bold}');
+	      });
+
+	      
+
+	      observer= new window.MutationObserver(classChanged)
+	      observer.observe(document.getElementById('stats'),{
+		  attributes:true,
+		  attributeFilter:['class']
+	      })
+
+	      function classChanged(){
+		  element=document.getElementById('stats');
+		  element=document.getElementById('contingency_table_large');
+		  element.style.top="0px"
+		  element.style.left="0px"
+	      }
+	      
+	      Array.from(document.getElementById('substorm_results_table').getElementsByClassName('signature_All')).forEach((element) => {
+		  element.classList.add('next')
+	      });
+	      rows=Array.from(document.getElementById('substorm_results_table').getElementsByTagName('tr'))
+	      first=rows.shift()
+	      first.getElementsByTagName('th')[1].style.visibility='hidden';
+	      rows.forEach((row)=>{
+		  row.getElementsByTagName('td')[1].style.visibility='hidden';
+	      });
+	      document.getElementById('substorm_results_table_2').classList.add('next')
+	  }
+	</script>
+<!-- Copyright © 2015 John Haiducek -->
+</body>
+</html>

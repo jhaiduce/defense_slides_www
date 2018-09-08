@@ -1,0 +1,43 @@
+/* Table */
+
+.slide table {
+    margin-bottom: 1em;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Cells */
+
+.slide th,
+.slide td {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left:0.8em;
+    padding-right:0.8em;
+}
+
+.slide th {
+    text-align: left;
+    font-weight: bold;
+}
+
+/* Lines */
+
+.slide thead{
+    background:
+        linear-gradient(
+            to top,
+            var(--color-line) 0.06em,
+            transparent 0.06em
+        ) repeat-x;
+}
+
+/* Stripes */
+
+.slide table.striped tr:nth-child(even) {
+    background: var(--color-fill);
+}
+
+.slide table.striped tr > * {
+    background-image: none;
+}
